@@ -17,14 +17,13 @@ limitations under the License.
 package controller
 
 import (
-	"context"
+  "context"
+  "k8s.io/apimachinery/pkg/runtime"
+  ctrl "sigs.k8s.io/controller-runtime"
+  "sigs.k8s.io/controller-runtime/pkg/client"
+  "sigs.k8s.io/controller-runtime/pkg/log"
 
-	"k8s.io/apimachinery/pkg/runtime"
-	ctrl "sigs.k8s.io/controller-runtime"
-	"sigs.k8s.io/controller-runtime/pkg/client"
-	"sigs.k8s.io/controller-runtime/pkg/log"
-
-	securityv1alpha1 "github.com/launchboxio/cript/api/v1alpha1"
+  securityv1alpha1 "github.com/launchboxio/cript/api/v1alpha1"
 )
 
 // DeclarationReconciler reconciles a Declaration object

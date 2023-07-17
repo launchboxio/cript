@@ -14,7 +14,7 @@ type Admission struct {
 	Request *admissionv1.AdmissionRequest
 }
 
-func (a *Admission) RunPodReview() *admissionv1.AdmissionReview {
+func (a *Admission) RunPodReview() (*admissionv1.AdmissionReview, error) {
 	res := &admissionv1.AdmissionReview{
 		TypeMeta: metav1.TypeMeta{
 			Kind:       "AdmissionReview",
@@ -31,12 +31,7 @@ func (a *Admission) RunPodReview() *admissionv1.AdmissionReview {
 	}
 	pod, err := a.Pod()
 	if err != nil {
-		res.Response.Allowed = false
-		res.Response.Result = &metav1.Status{
-			Code:    400,
-			Message: "Payload was invalid",
-		}
-		return res
+		return nil, err
 	}
 
 	images := []string{}
@@ -61,7 +56,7 @@ func (a *Admission) RunPodReview() *admissionv1.AdmissionReview {
 	//}
 	//}
 
-	return res
+	return res, nil
 }
 
 func (a Admission) Pod() (*corev1.Pod, error) {

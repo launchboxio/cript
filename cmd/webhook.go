@@ -4,7 +4,7 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
-	"github.com/sirupsen/logrus"
+	"github.com/launchboxio/cript/internal/admission"
 	"github.com/spf13/cobra"
 	admissionv1 "k8s.io/api/admission/v1"
 	"net/http"
@@ -19,13 +19,10 @@ var (
 )
 
 func init() {
-
+	webhookCmd.Flags().Int16("port", 8080, "The port to serve webhooks on")
 }
 
 func validatePod(w http.ResponseWriter, r *http.Request) {
-	logger := logrus.WithField("uri", r.RequestURI)
-	logger.Debug("received validation request")
-
 	in, err := parseRequest(*r)
 	if err != nil {
 		logger.Error(err)
@@ -33,12 +30,12 @@ func validatePod(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	adm := admission.Admitter{
+	adm := admission.Admission{
 		Logger:  logger,
 		Request: in.Request,
 	}
 
-	out, err := adm.ValidatePodReview()
+	out, err := adm.RunPodReview()
 	if err != nil {
 		e := fmt.Sprintf("could not generate admission response: %v", err)
 		logger.Error(e)
@@ -55,17 +52,16 @@ func validatePod(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	logger.Debug("sending response")
-	logger.Debugf("%s", jout)
 	fmt.Fprintf(w, "%s", jout)
 }
 
 func webhookServer(cmd *cobra.Command, args []string) {
+	port, _ := cmd.Flags().GetInt8("port")
 	http.HandleFunc("/pods", validatePod)
 	http.HandleFunc("/health", func(w http.ResponseWriter, r *http.Request) {
 		fmt.Fprint(w, "OK")
 	})
-	err := http.ListenAndServe(":3333", nil)
+	err := http.ListenAndServe(fmt.Sprintf(":%d", port), nil)
 	if err != nil {
 		logger.Fatal(err)
 	}

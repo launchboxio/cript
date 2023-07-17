@@ -1,0 +1,4 @@
+store: "redis"
+
+redis:
+  address: "localhost:6379"
