@@ -26,7 +26,6 @@ func init() {
 }
 
 func runScansList(cmd *cobra.Command, args []string) {
-	fmt.Println(conf)
 	var config *rest.Config
 	var err error
 

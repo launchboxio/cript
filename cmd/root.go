@@ -1,11 +1,9 @@
 package cmd
 
 import (
-	"fmt"
-	"github.com/launchboxio/cript/internal/config"
-	"github.com/spf13/cobra"
-	"go.uber.org/zap"
-	"os"
+  "github.com/launchboxio/cript/internal/config"
+  "github.com/spf13/cobra"
+  "go.uber.org/zap"
 )
 
 var (
@@ -15,7 +13,6 @@ var (
 		PersistentPreRun: func(cmd *cobra.Command, args []string) {
 			configPath, _ := cmd.Flags().GetString("config")
 			LoadConfig(configPath)
-			fmt.Println(conf)
 		},
 	}
 	logger *zap.SugaredLogger
@@ -35,8 +32,7 @@ func init() {
 
 func Execute() {
 	if err := rootCmd.Execute(); err != nil {
-		fmt.Fprintln(os.Stderr, err)
-		os.Exit(1)
+		logger.Fatal(err)
 	}
 }
 
