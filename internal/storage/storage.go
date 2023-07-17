@@ -20,7 +20,17 @@ func NewForConfig(config *config.Config) (Storage, error) {
 	switch provider {
 	case "redis":
 		return NewRedisAdapter(config.Redis)
+	case "postgres":
+		return NewPostgresAdapter(config.Postgres)
+	case "mysql":
+		return NewMysqlAdapter(config.Mysql)
+	case "s3":
+		return NewS3Adapter(config.S3)
 	default:
 		return nil, errors.New(fmt.Sprintf("Invalid storage provider: %s", provider))
 	}
+}
+
+func SupportsAutoMigrate(store Storage) bool {
+	return false
 }
