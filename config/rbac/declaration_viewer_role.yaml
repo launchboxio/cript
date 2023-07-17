@@ -1,0 +1,27 @@
+# permissions for end users to view declarations.
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  labels:
+    app.kubernetes.io/name: clusterrole
+    app.kubernetes.io/instance: declaration-viewer-role
+    app.kubernetes.io/component: rbac
+    app.kubernetes.io/created-by: cript
+    app.kubernetes.io/part-of: cript
+    app.kubernetes.io/managed-by: kustomize
+  name: declaration-viewer-role
+rules:
+- apiGroups:
+  - security.cript.dev
+  resources:
+  - declarations
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - security.cript.dev
+  resources:
+  - declarations/status
+  verbs:
+  - get

@@ -1,0 +1,59 @@
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  creationTimestamp: null
+  name: manager-role
+rules:
+- apiGroups:
+  - security.cript.dev
+  resources:
+  - declarations
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - security.cript.dev
+  resources:
+  - declarations/finalizers
+  verbs:
+  - update
+- apiGroups:
+  - security.cript.dev
+  resources:
+  - declarations/status
+  verbs:
+  - get
+  - patch
+  - update
+- apiGroups:
+  - security.cript.dev
+  resources:
+  - scans
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - security.cript.dev
+  resources:
+  - scans/finalizers
+  verbs:
+  - update
+- apiGroups:
+  - security.cript.dev
+  resources:
+  - scans/status
+  verbs:
+  - get
+  - patch
+  - update

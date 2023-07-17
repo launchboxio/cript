@@ -1,0 +1,6 @@
+## Append samples of your project ##
+resources:
+- security_v1alpha1_scan.yaml
+- security_v1alpha1_manifest.yaml
+- security_v1alpha1_declaration.yaml
+#+kubebuilder:scaffold:manifestskustomizesamples

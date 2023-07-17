@@ -1,0 +1,12 @@
+apiVersion: security.cript.dev/v1alpha1
+kind: Scan
+metadata:
+  labels:
+    app.kubernetes.io/name: scan
+    app.kubernetes.io/instance: scan-sample
+    app.kubernetes.io/part-of: cript
+    app.kubernetes.io/managed-by: kustomize
+    app.kubernetes.io/created-by: cript
+  name: scan-sample
+spec:
+  # TODO(user): Add fields here

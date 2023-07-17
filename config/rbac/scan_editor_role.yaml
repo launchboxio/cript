@@ -1,0 +1,31 @@
+# permissions for end users to edit scans.
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  labels:
+    app.kubernetes.io/name: clusterrole
+    app.kubernetes.io/instance: scan-editor-role
+    app.kubernetes.io/component: rbac
+    app.kubernetes.io/created-by: cript
+    app.kubernetes.io/part-of: cript
+    app.kubernetes.io/managed-by: kustomize
+  name: scan-editor-role
+rules:
+- apiGroups:
+  - security.cript.dev
+  resources:
+  - scans
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - security.cript.dev
+  resources:
+  - scans/status
+  verbs:
+  - get

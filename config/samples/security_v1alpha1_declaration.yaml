@@ -1,0 +1,12 @@
+apiVersion: security.cript.dev/v1alpha1
+kind: Declaration
+metadata:
+  labels:
+    app.kubernetes.io/name: declaration
+    app.kubernetes.io/instance: declaration-sample
+    app.kubernetes.io/part-of: cript
+    app.kubernetes.io/managed-by: kustomize
+    app.kubernetes.io/created-by: cript
+  name: declaration-sample
+spec:
+  # TODO(user): Add fields here
