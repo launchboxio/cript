@@ -24,6 +24,7 @@ import (
 	"k8s.io/apimachinery/pkg/api/errors"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/types"
+	"time"
 
 	"k8s.io/apimachinery/pkg/runtime"
 	ctrl "sigs.k8s.io/controller-runtime"
@@ -60,8 +61,10 @@ func (r *ScanReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.
 	err := r.Get(ctx, req.NamespacedName, scan)
 	if err != nil {
 		if errors.IsNotFound(err) {
+			ctrl.Log.Info("Scan resource not found")
 			return ctrl.Result{}, nil
 		}
+		ctrl.Log.Error(err, "Failed getting scan resource")
 		return ctrl.Result{}, err
 	}
 
@@ -73,11 +76,14 @@ func (r *ScanReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.
 		job := r.jobForScan(scan)
 		err = r.Create(ctx, job)
 		if err != nil {
+			ctrl.Log.Error(err, "Failed creating new job resource")
 			return ctrl.Result{}, err
 		}
 		// Deployment created successfully - return and requeue
+		ctrl.Log.Info("Job created, requeueing")
 		return ctrl.Result{Requeue: true}, nil
 	} else if err != nil {
+		ctrl.Log.Error(err, "Failed getting job resource")
 		return ctrl.Result{}, err
 	}
 
@@ -86,7 +92,11 @@ func (r *ScanReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.
 	// Once the job has completed (successfully), analyze the report
 	if found.Status.Succeeded == 0 {
 		// Continue polling, waiting for completion
+		ctrl.Log.Info("Waiting for job to complete")
+		return ctrl.Result{RequeueAfter: 1 * time.Minute}, nil
 	}
+
+	ctrl.Log.Info("Image scan completed, we would now run analysis")
 
 	// Job succeeded
 	// Update the scan status with the output from the report

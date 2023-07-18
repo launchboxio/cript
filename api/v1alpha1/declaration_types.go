@@ -42,9 +42,10 @@ type Manifest struct {
 }
 
 type ManifestRule struct {
-	Key    string   `json:"key"`
-	Equals string   `json:"equals,omitempty"`
-	OneOf  []string `json:"oneOf,omitempty"`
+	Key         string   `json:"key"`
+	Equals      string   `json:"equals,omitempty"`
+	OneOf       []string `json:"oneOf,omitempty"`
+	ArrayEquals []string `json:"arrayEquals,omitempty"`
 }
 
 // DeclarationStatus defines the observed state of Declaration

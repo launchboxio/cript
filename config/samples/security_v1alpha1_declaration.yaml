@@ -9,9 +9,15 @@ metadata:
     app.kubernetes.io/created-by: cript
   name: declaration-sample
 spec:
-  # TODO(user): Add fields here
   ignore: []
   manifest:
     rules:
-      - key: "ContainerConfig.Entrypoint"
-        equals: "/docker-entrypoint.sh"
+      - key: "ContainerConfig.Cmd"
+        arrayEquals:
+          - "nginx"
+          - "-g"
+          - "daemon off;"
+      - key: "ContainerConfig.User"
+        equals: ""
+      - key: "Architecture"
+        equals: "amd64"

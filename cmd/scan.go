@@ -81,8 +81,7 @@ func getGrypeInformation(grypePath string, image string) (string, models.Documen
 	grypeCmd := exec.Command(grypePath, image, "-q", "-o=json")
 	grypeCmd.Stdout = &outb
 	grypeCmd.Stderr = &errb
-	//fmt.Println(outb.String())
-	//fmt.Println(errb.String())
+
 	err := grypeCmd.Run()
 	if err != nil {
 		return "", res, err

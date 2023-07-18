@@ -48,6 +48,10 @@ spec:
                   rules:
                     items:
                       properties:
+                        arrayEquals:
+                          items:
+                            type: string
+                          type: array
                         equals:
                           type: string
                         key:
