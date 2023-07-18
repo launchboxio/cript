@@ -1,7 +1,6 @@
 package config
 
 import (
-	"fmt"
 	"github.com/spf13/viper"
 	"strings"
 )
@@ -37,7 +36,12 @@ type S3 struct {
 }
 
 func Load(path string) (*Config, error) {
-	cfg := &Config{}
+	cfg := &Config{
+		Store: "redis",
+		Redis: Redis{
+			Address: "redis-master.default:6379",
+		},
+	}
 	viper.SetConfigName("config")
 	viper.AddConfigPath(path)
 	viper.SetConfigType("yaml")
@@ -56,7 +60,6 @@ func Load(path string) (*Config, error) {
 	}
 
 	for _, key := range viper.AllKeys() {
-		fmt.Println(key)
 		envKey := strings.ToUpper(strings.ReplaceAll(key, ".", "_"))
 		err := viper.BindEnv(key, envKey)
 		if err != nil {
