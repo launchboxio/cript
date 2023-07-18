@@ -98,10 +98,17 @@ func (r *ScanReconciler) SetupWithManager(mgr ctrl.Manager) error {
 
 func (r *ScanReconciler) jobForScan(scan *securityv1alpha1.Scan) *batchv1.Job {
 	parallelism := int32(1)
+	// TODO: Move to -rootless, and remove securityContext.privileged: true
+	privileged := true
 	// TODO: Mount imagePullSecrets if needed
 	// TODO: Mount the config file for cript
 	volumes := []corev1.Volume{{
 		Name: "docker-graph-storage",
+		VolumeSource: corev1.VolumeSource{
+			EmptyDir: &corev1.EmptyDirVolumeSource{},
+		},
+	}, {
+		Name: "dind-certs",
 		VolumeSource: corev1.VolumeSource{
 			EmptyDir: &corev1.EmptyDirVolumeSource{},
 		},
@@ -130,15 +137,50 @@ func (r *ScanReconciler) jobForScan(scan *securityv1alpha1.Scan) *batchv1.Job {
 						},
 						Env: []corev1.EnvVar{{
 							Name:  "DOCKER_HOST",
-							Value: "tcp://localhost:2375",
+							Value: "tcp://localhost:2376",
+						}, {
+							Name:  "DOCKER_TLS_VERIFY",
+							Value: "1",
+						}, {
+							Name:  "DOCKER_CERT_PATH",
+							Value: "/certs/client",
+						}},
+						VolumeMounts: []corev1.VolumeMount{{
+							Name:      "dind-certs",
+							MountPath: "/certs/client",
 						}},
 					}, {
 						Name:  "dind-daemon",
-						Image: "docker:24.0.4-dind-rootless",
+						Image: "docker:24.0.4-dind",
+						SecurityContext: &corev1.SecurityContext{
+							Privileged: &privileged,
+						},
+						Args: []string{
+							"--userland-proxy=false",
+							"--debug",
+						},
+						Env: []corev1.EnvVar{{
+							Name:  "DOCKER_TLS_CERTDIR",
+							Value: "/certs",
+						}},
 						VolumeMounts: []corev1.VolumeMount{{
 							Name:      "docker-graph-storage",
 							MountPath: "/var/lib/docker",
+						}, {
+							Name:      "dind-certs",
+							MountPath: "/certs/client",
 						}},
+						ReadinessProbe: &corev1.Probe{
+							PeriodSeconds: int32(1),
+							ProbeHandler: corev1.ProbeHandler{
+								Exec: &corev1.ExecAction{
+									Command: []string{
+										"ls",
+										"/certs/client/ca.pem",
+									},
+								},
+							},
+						},
 					}},
 					RestartPolicy:      corev1.RestartPolicyOnFailure,
 					ServiceAccountName: serviceAccount,

@@ -22,13 +22,14 @@ var scanCmd = &cobra.Command{
 func init() {
 	scanCmd.Flags().String("image", "", "Container image to scan")
 	scanCmd.Flags().String("bucket", "image-scans", "S3 bucket for storing raw scan output")
+	scanCmd.Flags().String("grype-path", "grype", "Path to the Grype binary")
 	scanCmd.MarkFlagRequired("image")
 }
 
 func runScan(cmd *cobra.Command, args []string) {
 
 	image, _ := cmd.Flags().GetString("image")
-
+	grypePath, _ := cmd.Flags().GetString("grype-path")
 	store, err := storage.NewForConfig(conf)
 	if err != nil {
 		logger.Fatal(err)
@@ -51,7 +52,7 @@ func runScan(cmd *cobra.Command, args []string) {
 	if err != nil {
 		logger.Fatal(err)
 	}
-	_, res, err := getGrypeInformation(image)
+	_, res, err := getGrypeInformation(grypePath, image)
 	if err != nil {
 		logger.Fatalf("Grype scan failed: %v\n", err)
 	}
@@ -73,14 +74,15 @@ func runScan(cmd *cobra.Command, args []string) {
 	logger.Info("Analysis complete")
 }
 
-func getGrypeInformation(image string) (string, models.Document, error) {
+func getGrypeInformation(grypePath string, image string) (string, models.Document, error) {
 	var outb, errb bytes.Buffer
 	var res models.Document
 
-	grypeCmd := exec.Command("grype", image, "-q", "-o=json")
+	grypeCmd := exec.Command(grypePath, image, "-q", "-o=json")
 	grypeCmd.Stdout = &outb
 	grypeCmd.Stderr = &errb
-
+	//fmt.Println(outb.String())
+	//fmt.Println(errb.String())
 	err := grypeCmd.Run()
 	if err != nil {
 		return "", res, err
