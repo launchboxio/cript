@@ -2,6 +2,11 @@
 
 # Container Risk Inspection and Protection Tool 
 
+![GitHub](https://img.shields.io/github/license/launchboxio/cript)
+![GitHub go.mod Go version (subdirectory of monorepo)](https://img.shields.io/github/go-mod/go-version/launchboxio/cript)
+![GitHub release (with filter)](https://img.shields.io/github/v/release/launchboxio/cript)
+![Cript.Dev](https://img.shields.io/cript.dev)
+
 ## Development
 
 ```shell
