@@ -1,9 +1,9 @@
 package cmd
 
 import (
-  "github.com/launchboxio/cript/internal/config"
-  "github.com/spf13/cobra"
-  "go.uber.org/zap"
+	"github.com/launchboxio/cript/internal/config"
+	"github.com/spf13/cobra"
+	"go.uber.org/zap"
 )
 
 var (

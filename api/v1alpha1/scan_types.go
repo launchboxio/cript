@@ -31,16 +31,20 @@ type DeclarationRef struct {
 
 // ScanSpec defines the desired state of Scan
 type ScanSpec struct {
-	ImageUri string `json:"image_uri,omitempty"`
+	ImageUri string `json:"imageUri,omitempty"`
 
 	// Reference to the declaration to validate packages during a scan
-	DeclarationRef      DeclarationRef     `json:"declaration_ref,omitempty"`
-	ImagePullSecretsRef v1.SecretReference `json:"image_pull_secrets_ref,omitempty"`
+	DeclarationRef DeclarationRef `json:"declarationRef,omitempty"`
+
+	// For private images, we'll need a secretRef to use for pulling them
+	ImagePullSecretsRef v1.SecretReference `json:"imagePullSecretsRef,omitempty"`
 }
 
 // ScanStatus defines the observed state of Scan
 type ScanStatus struct {
 	State string `json:"state,omitempty"`
+	Job   string `json:"job,omitempty"`
+
 	//Vulnerabilities []interface{} `json:"vulnerabilities,omitempty"`
 }
 

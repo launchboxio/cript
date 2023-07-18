@@ -62,6 +62,8 @@ func init() {
 	operatorCmd.Flags().BoolVar(&enableLeaderElection, "leader-elect", false,
 		"Enable leader election for controller manager. "+
 			"Enabling this will ensure there is only one active controller manager.")
+
+	operatorCmd.Flags().String("scanner-image", "", "Image to use for scanning containers")
 }
 
 func runOperator(cmd *cobra.Command, args []string) {

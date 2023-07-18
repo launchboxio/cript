@@ -35,13 +35,32 @@ spec:
           spec:
             description: DeclarationSpec defines the desired state of Declaration
             properties:
-              failure_policy:
+              failurePolicy:
+                description: Criteria for when a scan should be marked as failed
                 type: string
               ignore:
                 description: Vulnerabilities to ignore
                 items:
                   type: string
                 type: array
+              manifest:
+                properties:
+                  rules:
+                    items:
+                      properties:
+                        equals:
+                          type: string
+                        key:
+                          type: string
+                        oneOf:
+                          items:
+                            type: string
+                          type: array
+                      required:
+                      - key
+                      type: object
+                    type: array
+                type: object
             type: object
           status:
             description: DeclarationStatus defines the observed state of Declaration

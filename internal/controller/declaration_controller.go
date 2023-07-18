@@ -17,13 +17,14 @@ limitations under the License.
 package controller
 
 import (
-  "context"
-  "k8s.io/apimachinery/pkg/runtime"
-  ctrl "sigs.k8s.io/controller-runtime"
-  "sigs.k8s.io/controller-runtime/pkg/client"
-  "sigs.k8s.io/controller-runtime/pkg/log"
+	"context"
+	"k8s.io/apimachinery/pkg/api/errors"
+	"k8s.io/apimachinery/pkg/runtime"
+	ctrl "sigs.k8s.io/controller-runtime"
+	"sigs.k8s.io/controller-runtime/pkg/client"
+	"sigs.k8s.io/controller-runtime/pkg/log"
 
-  securityv1alpha1 "github.com/launchboxio/cript/api/v1alpha1"
+	securityv1alpha1 "github.com/launchboxio/cript/api/v1alpha1"
 )
 
 // DeclarationReconciler reconciles a Declaration object
@@ -47,6 +48,17 @@ type DeclarationReconciler struct {
 // - https://pkg.go.dev/sigs.k8s.io/controller-runtime@v0.14.1/pkg/reconcile
 func (r *DeclarationReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.Result, error) {
 	_ = log.FromContext(ctx)
+
+	declaration := &securityv1alpha1.Declaration{}
+	err := r.Get(ctx, req.NamespacedName, declaration)
+	if err != nil {
+		if err != nil {
+			if errors.IsNotFound(err) {
+				return ctrl.Result{}, nil
+			}
+			return ctrl.Result{}, err
+		}
+	}
 
 	// For now, the declaration controller is essentially a no-op.
 	// The resource is currently only referenced when creating

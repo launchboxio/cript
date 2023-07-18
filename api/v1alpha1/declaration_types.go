@@ -31,7 +31,20 @@ type DeclarationSpec struct {
 	// Vulnerabilities to ignore
 	Ignore []string `json:"ignore,omitempty"`
 
-	FailurePolicy string `json:"failure_policy,omitempty"`
+	// Criteria for when a scan should be marked as failed
+	FailurePolicy string `json:"failurePolicy,omitempty"`
+
+	Manifest Manifest `json:"manifest,omitempty"`
+}
+
+type Manifest struct {
+	Rules []ManifestRule `json:"rules,omitempty"`
+}
+
+type ManifestRule struct {
+	Key    string   `json:"key"`
+	Equals string   `json:"equals,omitempty"`
+	OneOf  []string `json:"oneOf,omitempty"`
 }
 
 // DeclarationStatus defines the observed state of Declaration

@@ -35,7 +35,7 @@ spec:
           spec:
             description: ScanSpec defines the desired state of Scan
             properties:
-              declaration_ref:
+              declarationRef:
                 description: Reference to the declaration to validate packages during
                   a scan
                 properties:
@@ -44,9 +44,9 @@ spec:
                   namespace:
                     type: string
                 type: object
-              image_pull_secrets_ref:
-                description: SecretReference represents a Secret Reference. It has
-                  enough information to retrieve secret in any namespace
+              imagePullSecretsRef:
+                description: For private images, we'll need a secretRef to use for
+                  pulling them
                 properties:
                   name:
                     description: name is unique within a namespace to reference a
@@ -58,12 +58,14 @@ spec:
                     type: string
                 type: object
                 x-kubernetes-map-type: atomic
-              image_uri:
+              imageUri:
                 type: string
             type: object
           status:
             description: ScanStatus defines the observed state of Scan
             properties:
+              job:
+                type: string
               state:
                 type: string
             type: object
