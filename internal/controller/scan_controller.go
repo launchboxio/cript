@@ -80,10 +80,18 @@ func (r *ScanReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.
 	} else if err != nil {
 		return ctrl.Result{}, err
 	}
-	// Once the job has completed (successfully), analyze the report
 
-	// Store the validation state somewhere, so that we can
-	// reference it from webhook events
+	// Handle running status of the job
+
+	// Once the job has completed (successfully), analyze the report
+	if found.Status.Succeeded == 0 {
+		// Continue polling, waiting for completion
+	}
+
+	// Job succeeded
+	// Update the scan status with the output from the report
+
+	// Grab the data from the store, and cache it in our CRD as well
 
 	return ctrl.Result{}, nil
 }
